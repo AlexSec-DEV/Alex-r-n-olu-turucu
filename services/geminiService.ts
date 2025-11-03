@@ -1,12 +1,6 @@
 import { GoogleGenAI, Modality } from "@google/genai";
 import { AspectRatio } from '../types';
 
-if (!process.env.API_KEY) {
-  throw new Error("API_KEY environment variable is not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 // Helper function to extract base64 data and mimeType from a data URL
 const parseDataUrl = (dataUrl: string): { mimeType: string; data: string } => {
   const parts = dataUrl.split(',');
@@ -24,6 +18,11 @@ export const generateMockupImage = async (
   uploadedImage: string | null,
   customPrompt?: string
 ): Promise<string> => {
+  if (!process.env.API_KEY) {
+    throw new Error("API_KEY environment variable is not set");
+  }
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
   try {
     // Logic for when a reference image is provided
     if (uploadedImage) {
