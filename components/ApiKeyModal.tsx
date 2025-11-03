@@ -17,15 +17,15 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ onApiKeySubmit }) => {
   return (
     <div className="fixed inset-0 bg-deep-blue/80 backdrop-blur-sm flex items-center justify-center z-50">
       <form onSubmit={handleSubmit} className="bg-light-blue border border-slate-700 rounded-xl p-8 max-w-lg text-center shadow-2xl w-full mx-4">
-        <h2 className="text-2xl font-bold text-slate-100 mb-4">API Anahtarınızı Girin</h2>
+        <h2 className="text-2xl font-bold text-slate-100 mb-4">OpenAI API Anahtarınızı Girin</h2>
         <p className="text-slate-300 mb-6">
-          Uygulamayı kullanmak için Google AI Studio API anahtarınıza ihtiyacınız var. Anahtarınız tarayıcınızda yerel olarak saklanacaktır.
+          Uygulamayı kullanmak için OpenAI API anahtarınıza ihtiyacınız var. Anahtarınız tarayıcınızda yerel olarak saklanacaktır.
         </p>
         <input
           type="password"
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
-          placeholder="API Anahtarınızı buraya yapıştırın"
+          placeholder="API Anahtarınızı buraya yapıştırın (örn: sk-...)"
           className="w-full bg-slate-700 border border-slate-600 rounded-lg p-3 text-slate-200 placeholder-slate-400 focus:ring-2 focus:ring-brand-purple focus:border-brand-purple transition-colors mb-4"
           required
           autoFocus
@@ -40,12 +40,12 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ onApiKeySubmit }) => {
          <p className="text-xs text-slate-500 mt-4">
           API anahtarınızı şuradan alabilirsiniz:{' '}
           <a
-            href="https://aistudio.google.com/app/apikey"
+            href="https://platform.openai.com/api-keys"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-brand-purple-light"
           >
-            Google AI Studio
+            OpenAI Platform
           </a>.
         </p>
       </form>

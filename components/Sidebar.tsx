@@ -1,9 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Category, AspectRatio } from '../types';
 import { CATEGORIES, ASPECT_RATIOS } from '../constants';
 import SpinnerIcon from './icons/SpinnerIcon';
-import ImageIcon from './icons/ImageIcon';
-import CloseIcon from './icons/CloseIcon';
 
 interface SidebarProps {
   selectedProduct: string | null;
@@ -12,8 +10,6 @@ interface SidebarProps {
   setSelectedAspectRatio: (ratio: AspectRatio['value']) => void;
   onGenerate: () => void;
   isLoading: boolean;
-  uploadedImage: string | null;
-  setUploadedImage: (image: string | null) => void;
   customPrompt: string;
   setCustomPrompt: (prompt: string) => void;
 }
@@ -25,24 +21,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   setSelectedAspectRatio,
   onGenerate,
   isLoading,
-  uploadedImage,
-  setUploadedImage,
   customPrompt,
   setCustomPrompt,
 }) => {
   const [openCategory, setOpenCategory] = useState<string | null>(CATEGORIES[0]?.name || null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUploadedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <aside className="w-full md:w-96 bg-light-blue p-6 flex flex-col md:h-full overflow-y-auto">
@@ -95,55 +77,14 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold mb-3 text-brand-purple-light">2. Referans Resim Yükle (İsteğe Bağlı)</h3>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="image/png, image/jpeg, image/webp"
-            className="hidden"
-          />
-          {uploadedImage ? (
-            <div className="relative group">
-              <img src={uploadedImage} alt="Yüklenen Referans" className="rounded-lg w-full object-cover" />
-              <button
-                onClick={() => {
-                  setUploadedImage(null);
-                  if (fileInputRef.current) fileInputRef.current.value = "";
-                }}
-                className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1.5 transition-colors"
-                aria-label="Resmi kaldır"
-              >
-                <CloseIcon className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full border-2 border-dashed border-slate-600 hover:border-brand-purple-light rounded-lg p-8 flex flex-col items-center justify-center text-slate-400 hover:text-slate-200 transition-colors"
-            >
-              <ImageIcon className="w-8 h-8 mb-2" />
-              <span>Resim Seçmek için Tıkla</span>
-              <span className="text-xs mt-1">PNG, JPG, WEBP</span>
-            </button>
-          )}
-        </div>
-
-        <div>
-          <h3 className="text-lg font-semibold mb-3 text-brand-purple-light">3. Boyut Seçin</h3>
-            {uploadedImage && (
-              <p className="text-xs text-slate-400 mb-3 -mt-2">
-                Referans resim yüklendiğinde boyut, orijinal resme göre belirlenir. Bu ayar yoksayılacaktır.
-              </p>
-            )}
-          <div className={`grid grid-cols-2 gap-3 ${uploadedImage ? 'opacity-50 cursor-not-allowed' : ''}`}>
+          <h3 className="text-lg font-semibold mb-3 text-brand-purple-light">2. Boyut Seçin</h3>
+          <div className="grid grid-cols-2 gap-3">
             {ASPECT_RATIOS.map((ratio) => (
               <button
                 key={ratio.value}
                 onClick={() => setSelectedAspectRatio(ratio.value)}
-                disabled={!!uploadedImage}
                 className={`p-3 text-sm rounded-lg transition-colors ${
-                  selectedAspectRatio === ratio.value && !uploadedImage
+                  selectedAspectRatio === ratio.value
                     ? 'bg-brand-purple text-white font-semibold'
                     : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
                 }`}
@@ -155,7 +96,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold mb-3 text-brand-purple-light">4. Ekstra Detay Ekle (İsteğe Bağlı)</h3>
+          <h3 className="text-lg font-semibold mb-3 text-brand-purple-light">3. Ekstra Detay Ekle (İsteğe Bağlı)</h3>
           <textarea
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}

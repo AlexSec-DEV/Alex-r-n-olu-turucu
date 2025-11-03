@@ -13,14 +13,13 @@ const App: React.FC = () => {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isResultVisible, setIsResultVisible] = useState<boolean>(true);
   const [customPrompt, setCustomPrompt] = useState<string>('');
   const [apiKey, setApiKey] = useState<string | null>(null);
 
   useEffect(() => {
-    // Sayfa yüklendiğinde API anahtarını yerel depolamadan al
-    const storedKey = localStorage.getItem('gemini-api-key');
+    // On page load, get the API key from local storage
+    const storedKey = localStorage.getItem('openai-api-key'); // Switched to openai-api-key for clarity
     if (storedKey) {
       setApiKey(storedKey);
     }
@@ -28,12 +27,12 @@ const App: React.FC = () => {
 
   const handleApiKeySubmit = (key: string) => {
     setApiKey(key);
-    localStorage.setItem('gemini-api-key', key);
+    localStorage.setItem('openai-api-key', key); // Switched to openai-api-key for clarity
   };
 
   const clearApiKey = () => {
       setApiKey(null);
-      localStorage.removeItem('gemini-api-key');
+      localStorage.removeItem('openai-api-key'); // Switched to openai-api-key for clarity
   }
 
   const handleGenerate = useCallback(async () => {
@@ -52,20 +51,20 @@ const App: React.FC = () => {
     setIsResultVisible(true);
 
     try {
-      const imageUrl = await generateMockupImage(selectedProduct, selectedAspectRatio, uploadedImage, customPrompt, apiKey);
+      const imageUrl = await generateMockupImage(selectedProduct, selectedAspectRatio, customPrompt, apiKey);
       setGeneratedImage(imageUrl);
     } catch (err: any) {
       let errorMessage = err.message || "Bilinmeyen bir hata oluştu.";
-      // Genel API anahtarı hata kontrolü
-      if (err.toString().toLowerCase().includes('api key not valid')) {
+      // OpenAI API key error check
+      if (err.toString().toLowerCase().includes('incorrect api key')) {
          errorMessage = "Girdiğiniz API anahtarı geçersiz. Lütfen kontrol edip tekrar deneyin.";
-         clearApiKey(); // Geçersiz anahtarı temizle ve modalı tekrar göster
+         clearApiKey(); // Clear the invalid key and show the modal again
       }
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
-  }, [selectedProduct, selectedAspectRatio, uploadedImage, customPrompt, apiKey]);
+  }, [selectedProduct, selectedAspectRatio, customPrompt, apiKey]);
 
 
   return (
@@ -80,8 +79,6 @@ const App: React.FC = () => {
           setSelectedAspectRatio={setSelectedAspectRatio}
           onGenerate={handleGenerate}
           isLoading={isLoading || !apiKey}
-          uploadedImage={uploadedImage}
-          setUploadedImage={setUploadedImage}
           customPrompt={customPrompt}
           setCustomPrompt={setCustomPrompt}
         />
