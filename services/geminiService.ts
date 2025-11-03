@@ -16,12 +16,13 @@ export const generateMockupImage = async (
   productName: string,
   aspectRatio: AspectRatio['value'],
   uploadedImage: string | null,
-  customPrompt?: string
+  customPrompt: string | undefined,
+  apiKey: string
 ): Promise<string> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable is not set");
+  if (!apiKey) {
+    throw new Error("API anahtarı sağlanmadı.");
   }
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: apiKey });
 
   try {
     // Logic for when a reference image is provided
