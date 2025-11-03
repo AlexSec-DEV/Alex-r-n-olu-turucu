@@ -1,0 +1,5 @@
+{
+  "name": "Alex Ürün Oluşturucu",
+  "description": "An AI-powered web application to generate high-quality product mockups. Users can select from various product categories, choose an aspect ratio, and download the generated image.",
+  "requestFramePermissions": []
+}
