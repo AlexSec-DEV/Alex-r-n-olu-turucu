@@ -82,6 +82,7 @@ export const generateMockupImage = async (
      if (error instanceof Error && error.message.includes('Invalid data URL format')) {
       throw new Error("The uploaded image file is corrupted or in an unsupported format. Please try another image.");
     }
-    throw new Error("Failed to generate mockup. Please try again.");
+    // Re-throw the original error so it can be handled by the calling component.
+    throw error;
   }
 };
